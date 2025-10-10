@@ -1,11 +1,13 @@
 <template>
   <div>
-    <WelcomePageScreen/>
+    
+     <RouterView></RouterView>
   </div>
 </template>
 
 <script setup lang="ts">
-import WelcomePageScreen from './screens/WelcomePageScreen.vue';
+import { RouterView } from 'vue-router';
+
 
 </script>
 

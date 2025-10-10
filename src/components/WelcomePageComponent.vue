@@ -1,23 +1,32 @@
 <template>
   <div>
-    <div class="fs-4 text-center ">Welcome to Premium Blackjack</div>
-    
-    
-    
-        <MDBInput type="text" label="Please enter your name"></MDBInput>
-    <div class="text-center">
-    <MDBBtn >Start game </MDBBtn>
-    </div>
-    
-    
+    <MDBCard>
+      <MDBCardBody>
+        <MDBInput v-model="playerName" type="text" label="Player name"></MDBInput>
+        <div class="text-danger">{{ nameError }}</div>
+        <div class="text-center mt-3">
+          <MDBBtn v-on:click="redirectRequest" size="sm" color="info">Start game </MDBBtn>
+        </div>
+        
+      </MDBCardBody>
+    </MDBCard>
   </div>
 </template>
 
 <script setup lang="ts">
-import { MDBBtn, MDBInput } from "mdb-vue-ui-kit";
+import { MDBBtn, MDBCard, MDBCardBody, MDBInput } from "mdb-vue-ui-kit";
+const playerName=defineModel<string>()
+defineProps<{
+  nameError:string
+}>()
+const emits=defineEmits<{
+  (e:"requestToChangePage"):void
+}>()
+const redirectRequest=():void=>{
+  emits("requestToChangePage")
+}
+
+
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>
