@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { cardValue } from "../types";
+import type { card, cardValue } from "../types";
+import { router } from "../router/intex";
 
 export const useCardStore = defineStore("card", () => {
   const cardValues: cardValue[] = [
@@ -18,21 +19,25 @@ export const useCardStore = defineStore("card", () => {
     { name: "Q", value: 10 },
     { name: "K", value: 10 },
   ];
-
-  const cardTypes: string[] = ["Club", "Spade", "Diamond", "Heart"];
+  const winner = ref<string>("");
+  // const cardTypes: string[] = ["Club", "Spade", "Diamond", "Heart"];
+  const cardTypes: string[] = ["♥", "♦", "♣", "♠"];
   const index = ref<number>(-1);
-  const cards = ref<cardValue[]>([]);
-  const cardsOfUser = ref<cardValue[]>([]);
-  const cardsOfDealer = ref<cardValue[]>([]);
+  const cards = ref<card[]>([]);
+  const cardsOfUser = ref<card[]>([]);
+  const cardsOfDealer = ref<card[]>([]);
   const playerPoints = ref<number>(0);
   const dealerPoints = ref<number>(0);
+  const displayedDealerPoints = ref<number>(0);
   // Generate the full deck
   for (let i = 0; i < cardValues.length; i++) {
     for (let j = 0; j < cardTypes.length; j++) {
       // cards.value.push(cardValues[i]!.name + " " + cardTypes[j]!);
       cards.value.push({
-        name: cardValues[i]!.name + " " + cardTypes[j]!,
-        value: cardValues[i]!.value,
+        // name: cardValues[i]!.name + " " + cardTypes[j]!,
+        // value: cardValues[i]!.value,
+        value: { name: cardValues[i]!.name, value: cardValues[i]!.value },
+        symbol: cardTypes[j]!,
       });
     }
   }
@@ -49,7 +54,6 @@ export const useCardStore = defineStore("card", () => {
     );
     cards.value.splice(index.value, 1);
     index.value = -1;
-    console.log(playerPoints.value);
   };
   const giveCardToDealer = (): void => {
     randomCardGenerator();
@@ -58,20 +62,22 @@ export const useCardStore = defineStore("card", () => {
       cards.value[index.value]!,
       dealerPoints.value
     );
+    displayedDealerPoints.value =
+      dealerPoints.value -
+      givePoints(cards.value[index.value]!, dealerPoints.value);
     cards.value.splice(index.value, 1);
     index.value = -1;
-    console.log(dealerPoints.value);
   };
-  const givePoints = (card: cardValue, value: number): number => {
+  const givePoints = (card: card, value: number): number => {
     let points: number = 0;
-    if (card.name.includes("A")) {
+    if (card.value.name.includes("A")) {
       if (value + 11 <= 21) {
         points = 11;
       } else {
         points = 1;
       }
     } else {
-      points = card.value;
+      points = card.value.value
     }
     return points;
   };
@@ -105,32 +111,73 @@ export const useCardStore = defineStore("card", () => {
   };
   const startGame = (): void => {
     if (validateBidAmount()) {
-      walletMoney.value -= bidAmount.value;
       modalToggle();
       giveCardToPlayer();
       giveCardToPlayer();
       giveCardToDealer();
       giveCardToDealer();
-      winner();
+      judge();
+    } else {
+      bidAmount.value = 0;
     }
   };
   const hit = (): void => {
-    winner();
+    if (turn.value == 1) {
+      giveCardToPlayer();
+      judge();
+    } else {
+      // if (dealerPoints.value <= 17) {
+      //   giveCardToDealer();
+      //   winner();
+      // }
+      while (dealerPoints.value <= 17) {
+        giveCardToDealer();
+      }
+      judge();
+    }
   };
   const stand = (): void => {
-    if (turn.value == 0) {
+    turn.value = 2;
+
+    hit();
+  };
+  const judge = (): void => {
+    if (turn.value == 1) {
+      if (playerPoints.value == 21 || dealerPoints.value > 21) {
+        winner.value = "Player wins";
+        walletMoney.value += bidAmount.value;
+      } else if (playerPoints.value > 21 || dealerPoints.value == 21) {
+        winner.value = "Dealer wins";
+        walletMoney.value -= bidAmount.value;
+      }
     } else {
-      winner();
+      if (
+        (playerPoints.value <= 21 && playerPoints.value > dealerPoints.value) ||
+        dealerPoints.value > 21
+      ) {
+        winner.value = "Player wins";
+        walletMoney.value += bidAmount.value;
+      } else if (
+        playerPoints.value > 21 ||
+        (dealerPoints.value <= 21 && playerPoints.value < dealerPoints.value)
+      ) {
+        winner.value = "Dealer wins";
+        walletMoney.value -= bidAmount.value;
+      }
     }
   };
-  const winner = (): void => {
-    if (playerPoints.value == 21 && dealerPoints.value < 21) {
-      console.log("player wins");
-    } else if (dealerPoints.value == 21 && playerPoints.value) {
-      console.log("Dealer wins");
-    } else {
-      console.log("game continues");
-    }
+  const redirectToHome = (): void => {
+    winner.value = "";
+    playerName.value = "";
+    dealerPoints.value = 0;
+    playerPoints.value = 0;
+    turn.value = 1;
+    bidAmount.value = 0;
+    modalToggle();
+    walletMoney.value=1000
+    cardsOfUser.value = [];
+    cardsOfDealer.value = [];
+    router.push("/");
   };
 
   return {
@@ -148,5 +195,11 @@ export const useCardStore = defineStore("card", () => {
     cardsOfDealer,
     hit,
     stand,
+    dealerPoints,
+    playerPoints,
+    displayedDealerPoints,
+    winner,
+    redirectToHome,
+    turn,
   };
 });
