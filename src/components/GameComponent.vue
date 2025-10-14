@@ -1,32 +1,43 @@
 <template>
-  <div>
-    <div>Current Bid: {{ bidAmount }}</div>
-    <MDBBtn :disabled="buttonToggle" v-on:click="makeBet">Bet</MDBBtn>
-    <MDBBtn v-on:click="hitClicked" :disabled="hit">Hit</MDBBtn>
-    <MDBBtn v-on:click="standClicked" :disabled="stand">Stand</MDBBtn>
-    <div>{{ playerName }}<span v-if="points">{{": "+ points +" points" }}</span></div>
-  </div>
+  <MDBCard class="border border-dark rounded-0">
+    <MDBCardBody
+      class="d-flex gap-2 justify-content-between align-items-center"
+    >
+      <MDBBtn
+        class="border border-dark rounded-0"
+        size="lg"
+        v-on:click="hitClicked"
+        :disabled="hit"
+        >Hit</MDBBtn
+      >
+      <div class="text-center">
+        <div><strong>Current Bid:</strong> ${{ bidAmount }}</div>
+        <div><strong>Wallet Balance:</strong> ${{ walletMoney }}</div>
+      </div>
+      <MDBBtn
+        class="border border-dark rounded-0"
+        size="lg"
+        v-on:click="standClicked"
+        :disabled="stand"
+        >Stand</MDBBtn
+      >
+    </MDBCardBody>
+  </MDBCard>
 </template>
 
 <script setup lang="ts">
-import { MDBBtn } from "mdb-vue-ui-kit";
+import { MDBBtn, MDBCard, MDBCardBody } from "mdb-vue-ui-kit";
 
 defineProps<{
   bidAmount: number;
-  playerName: string;
-  points:number,
-  buttonToggle: boolean;
+  walletMoney: number;
   hit: boolean;
   stand: boolean;
 }>();
 const emits = defineEmits<{
-  (e: "requestToMakeBet"): void;
   (e: "requestToStand"): void;
   (e: "requestToPickCard"): void;
 }>();
-const makeBet = (): void => {
-  emits("requestToMakeBet");
-};
 const standClicked = (): void => {
   emits("requestToStand");
 };
