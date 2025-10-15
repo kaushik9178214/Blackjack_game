@@ -1,7 +1,7 @@
 <template>
   <div>
     <MDBCard class="border border-dark rounded-0">
-      <MDBCardBody class="d-grid gap-3">
+      <MDBCardBody class="d-grid gap-4">
         <MDBInput
           v-model="playerName"
           type="text"

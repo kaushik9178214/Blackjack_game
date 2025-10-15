@@ -1,10 +1,10 @@
 <template>
-  <MDBContainer>
+  <MDBContainer >
     <MDBRow>
       <h1 class="text-center">Welcome to Premium Blackjack</h1>
     </MDBRow>
     <MDBRow class="d-flex justify-content-center height align-items-center">
-      <MDBCol col="5">
+      <MDBCol cols="12"  md="5">
         <WelcomePageComponent
           v-model="store.playerName"
           :nameError="store.nameError"

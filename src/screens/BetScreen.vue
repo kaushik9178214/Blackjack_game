@@ -3,7 +3,7 @@
     <h2 class="text-center">Make your Bet</h2>
     <MDBContainer>
       <MDBRow class="d-flex justify-content-center height align-items-center">
-        <MDBCol col="5">
+        <MDBCol cols="12"  md="5">
           <BetComponent
             v-bind:bidError="store.bidError"
             v-model:walletMoney="store.walletMoney"
@@ -23,8 +23,6 @@ const store = useCardStore();
 const startGame = (amount: number): void => {
   store.bidAmount = Number(amount);
   store.startGame();
-  console.log("Cards of dealer", store.cardsOfDealer);
-  console.log("Cards of user", store.cardsOfUser);
 };
 </script>
 

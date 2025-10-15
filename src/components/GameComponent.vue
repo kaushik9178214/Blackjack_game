@@ -1,22 +1,22 @@
 <template>
   <MDBCard class="border border-dark rounded-0">
     <MDBCardBody
-      class="d-flex gap-2 justify-content-between align-items-center"
+      class="d-flex  gap-2 justify-content-between align-items-center"
     >
       <MDBBtn
-        class="border border-dark rounded-0"
-        size="lg"
+        class="border border-dark rounded-0 text-nowrap"
+        
         v-on:click="hitClicked"
         :disabled="hit"
         >Hit</MDBBtn
       >
       <div class="text-center">
-        <div><strong>Current Bid:</strong> ${{ bidAmount }}</div>
-        <div><strong>Wallet Balance:</strong> ${{ walletMoney }}</div>
+        <div class="text-no-wrap"><strong>Current Bid:</strong> ${{ bidAmount }}</div>
+        <div >{{ winner }}</div>
+        <div class="text-no-wrap"><strong>Wallet Balance:</strong> ${{ walletMoney }}</div>
       </div>
-      <MDBBtn
-        class="border border-dark rounded-0"
-        size="lg"
+      <MDBBtn 
+        class="border border-dark rounded-0 text-nowrap "
         v-on:click="standClicked"
         :disabled="stand"
         >Stand</MDBBtn
@@ -33,6 +33,7 @@ defineProps<{
   walletMoney: number;
   hit: boolean;
   stand: boolean;
+  winner:string
 }>();
 const emits = defineEmits<{
   (e: "requestToStand"): void;

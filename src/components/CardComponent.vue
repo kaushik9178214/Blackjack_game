@@ -1,23 +1,24 @@
 <template>
   
-    <MDBCard
+    <MDBCard :style="{width: '5rem', height: '8rem'}"
       :class="
         symbol == '♥' || symbol == '♦'
           ? 'border border-danger'
           : 'border border-dark'
       "
+      class="rounded-0"
     >
-      <MDBCardBody class="d-flex-column" :style="{width: '6.2rem', height: '9.9rem'}" >
+      <div class="p-2">
         <div :class="color">{{ card }}</div>
         <div :class="color" class="fs-1 text-center">{{ symbol }}</div>
         <div :class="color" class="text-end">{{ card }}</div>
-      </MDBCardBody>
+      </div>
     </MDBCard>
   
 </template>
 
 <script setup lang="ts">
-import { MDBCard, MDBCardBody } from "mdb-vue-ui-kit";
+import { MDBCard } from "mdb-vue-ui-kit";
 import { computed } from "vue";
 
 const props = defineProps<{

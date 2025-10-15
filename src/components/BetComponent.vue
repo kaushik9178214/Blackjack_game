@@ -1,5 +1,5 @@
 <template>
-  <MDBCard
+  <MDBCard 
     ><MDBCardBody class="d-grid gap-3 border border-dark">
       <div class="fs-4 text-center">
         <strong>Available amount :</strong> ${{ walletMoney }}
@@ -30,7 +30,7 @@ const emits = defineEmits<{
   (e: "requestToStartGame", value: number): void;
 }>();
 const walletMoney = defineModel<number>("walletMoney");
-const bidAmount = ref<number>(0);
+const bidAmount = ref<number>(1);
 const startGame = (): void => {
   emits("requestToStartGame", bidAmount.value);
 };
