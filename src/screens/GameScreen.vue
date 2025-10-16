@@ -1,39 +1,36 @@
 <template>
-  <MDBContainer>
-    <MDBCard class="border border-dark rounded-0">
-      <MDBCardBody class="d-flex flex-column gap-3 p-1">
-        <MDBRow class="align-items-center">
-          <!-- Left empty column -->
-          <!-- <MDBCol></MDBCol> -->
-
-          <!-- Center text column -->
-          <!-- offset -->
-          <MDBCol class="text-center h2">
-            <span class="text-danger">♥♦ </span>
-            <span>Blackjack</span>
-            <span> ♠♣</span>
-          </MDBCol>
-
-          <!-- Right icons column -->
-          <MDBCol class="d-flex justify-content-end gap-2">
-            <MDBIcon
-              icon="redo"
-              iconStyle="fas"
-              size="lg"
-              class="pointer text-success"
+  <div class="text-bg-success vh-100">
+  <div class="d-flex justify-content-between align-items-center ">
+          <MDBBtn
               v-on:click="store.newRound"
-            />
-            <MDBIcon
-              icon="sign-out-alt"
-              iconStyle="fas"
-              class="pointer text-danger"
-              size="lg"
-              v-on:click="store.redirectToHome"
-            />
-          </MDBCol>
-        </MDBRow>
+              class="rounded-0 shadow-0"
+              color="light"
+            >Retry</MDBBtn>
+          <div  class=" h1">
+            <span class="text-danger">♥♦ </span>
+            <span class="text-light">Blackjack</span>
+            <span> ♠♣</span>
+          </div>
 
-        <MDBRow>
+          
+          
+            
+            <MDBBtn
+              
+              color="light "
+              class="rounded-0 shadow-0"
+              v-on:click="store.redirectToHome"
+            > Exit</MDBBtn>
+          
+        </div>
+  <div class="d-flex justify-content-center vh-90 align-items-center" >
+    
+    <MDBCard class="border border-dark rounded-0 bg-info ">
+      
+      <MDBCardBody class="d-flex flex-column gap-3 align-content-center justify-content-center">
+        
+
+        <div>
           <MDBCardTitle class="text-center">
             Dealer
             <span> : {{ store.dealerPoints }} points </span>
@@ -44,10 +41,10 @@
               points
             </span> -->
           </MDBCardTitle>
-        </MDBRow>
+        </div>
 
-        <MDBRow>
-          <MDBCol col="12" class="d-flex gap-3 justify-content-center">
+        <div>
+          <div col="12" class="d-flex gap-3 justify-content-center">
             <!-- <CardComponent
               
                        
@@ -70,10 +67,10 @@
               :symbol="card.symbol"
             />
             <CardBackComponent v-if="!store.winner" />
-          </MDBCol>
-        </MDBRow>
-        <MDBRow class="d-flex justify-content-center">
-          <MDBCol sm="10" md="8" lg="5">
+          </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div sm="10" md="8" lg="5">
             <GameComponent
               v-on:requestToStand="finishPicking"
               v-bind:bidAmount="store.bidAmount"
@@ -82,30 +79,32 @@
               v-bind:stand="store.standController"
               v-on:requestToPickCard="store.hit"
               v-bind:winner="store.winner"
+              
             ></GameComponent>
-          </MDBCol>
-        </MDBRow>
+          </div>
+        </div>
 
-        <MDBRow>
-          <MDBCol col="12" class="d-flex gap-3 justify-content-center">
+        <div>
+          <div col="12" class="d-flex gap-3 justify-content-center">
             <CardComponent
               v-for="card in store.cardsOfUser"
               :card="card.value.name"
               :symbol="card.symbol"
             />
-          </MDBCol>
-        </MDBRow>
-        <MDBRow>
+          </div>
+        </div>
+        <div>
           <MDBCardTitle class="text-center">
             {{ store.playerName
             }}<span v-if="store.playerPoints">{{
               ": " + store.playerPoints + " points"
             }}</span>
           </MDBCardTitle>
-        </MDBRow>
+        </div>
       </MDBCardBody>
     </MDBCard>
-  </MDBContainer>
+  </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -116,6 +115,7 @@ import GameComponent from "../components/GameComponent.vue";
 import { useCardStore } from "../store/card-store";
 
 import {
+  MDBBtn,
   MDBCard,
   MDBCardBody,
   MDBCardTitle,
@@ -158,5 +158,8 @@ watch(
 <style scoped>
 .pointer {
   cursor: pointer;
+}
+.vh-90{
+  height: 90vh;
 }
 </style>
