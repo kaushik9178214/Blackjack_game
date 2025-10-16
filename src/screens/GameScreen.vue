@@ -6,10 +6,10 @@
               class="rounded-0 shadow-0"
               color="light"
             >Retry</MDBBtn>
-          <div  class=" h1">
-            <span class="text-danger">♥♦ </span>
-            <span class="text-light">Blackjack</span>
-            <span> ♠♣</span>
+          <div  class=" d-flex fs-3 ">
+            <span class="text-danger text-center">♥♦ </span>
+            <span class="text-light "><strong>Blackjack</strong></span>
+            <span class="text-center"> ♠♣</span>
           </div>
 
           
@@ -44,7 +44,7 @@
         </div>
 
         <div>
-          <div col="12" class="d-flex gap-3 justify-content-center">
+          <div  class="d-flex gap-3 justify-content-center">
             <!-- <CardComponent
               
                        
@@ -69,8 +69,8 @@
             <CardBackComponent v-if="!store.winner" />
           </div>
         </div>
-        <div class="d-flex justify-content-center">
-          <div sm="10" md="8" lg="5">
+        <div class="d-flex justify-content-center ">
+          <div >
             <GameComponent
               v-on:requestToStand="finishPicking"
               v-bind:bidAmount="store.bidAmount"

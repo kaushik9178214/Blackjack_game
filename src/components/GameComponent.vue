@@ -1,10 +1,10 @@
 <template>
   <MDBCard class="border border-dark rounded-0">
     <MDBCardBody
-      class="d-flex  gap-2 justify-content-between align-items-center"
+      class="d-sm-flex d-grid gap-2 justify-content-between align-items-center"
     >
       <MDBBtn
-        class="border border-dark rounded-0 text-nowrap"
+        class="border border-danger rounded-0  p-2 text-danger"
         
         v-on:click="hitClicked"
         :disabled="hit"
@@ -16,10 +16,10 @@
         <div class="text-no-wrap"><strong>Wallet Balance:</strong> ${{ walletMoney }}</div>
       </div>
       <MDBBtn 
-        class="border border-dark rounded-0 text-nowrap "
+        class="border border-danger rounded-0 p-2 text-danger"
         v-on:click="standClicked"
         :disabled="stand"
-        >Stand</MDBBtn
+        >Stay</MDBBtn
       >
     </MDBCardBody>
   </MDBCard>
