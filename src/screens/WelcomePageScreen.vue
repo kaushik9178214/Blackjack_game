@@ -1,10 +1,12 @@
 <template>
-  <MDBContainer >
+  <MDBContainer>
     <MDBRow>
-      <h1 class="text-center">Welcome to Premium Blackjack</h1>
+      <h1 class="text-center">
+        <span class="text-danger">♥ ♦</span> BlackJack ♠ ♣
+      </h1>
     </MDBRow>
     <MDBRow class="d-flex justify-content-center height align-items-center">
-      <MDBCol cols="12"  md="5">
+      <MDBCol cols="12" md="5">
         <WelcomePageComponent
           v-model="store.playerName"
           :nameError="store.nameError"
@@ -19,7 +21,7 @@
 import { MDBCol, MDBContainer, MDBRow } from "mdb-vue-ui-kit";
 import WelcomePageComponent from "../components/WelcomePageComponent.vue";
 import { useCardStore } from "../store/card-store";
-import { router } from "../router/intex";
+import { router } from "../router";
 const store = useCardStore();
 const verifyAndProceed = (): void => {
   if (store.validatePlayer()) {

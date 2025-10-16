@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <h2 class="text-center">Make your Bet</h2>
-    <MDBContainer>
-      <MDBRow class="d-flex justify-content-center height align-items-center">
-        <MDBCol cols="12"  md="5">
-          <BetComponent
-            v-bind:bidError="store.bidError"
-            v-model:walletMoney="store.walletMoney"
-            v-on:requestToStartGame="startGame"
-          />
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
-  </div>
+  <MDBContainer>
+    <MDBRow class="d-flex justify-content-center height align-items-center">
+      <MDBCol cols="12" md="5">
+        <h2 class="text-center">Make your Bet</h2>
+        <BetComponent
+          v-bind:bidError="store.bidError"
+          v-model:walletMoney="store.walletMoney"
+          v-on:requestToStartGame="startGame"
+        />
+      </MDBCol>
+    </MDBRow>
+  </MDBContainer>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +25,7 @@ const startGame = (amount: number): void => {
 </script>
 
 <style scoped>
-.height{
+.height {
   height: 80vh;
-}</style>
+}
+</style>

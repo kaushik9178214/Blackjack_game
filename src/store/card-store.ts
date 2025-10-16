@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import type { card, cardValue } from "../types";
-import { router } from "../router/intex";
+import { router } from "../router";
 
 export const useCardStore = defineStore("card", () => {
   const cardValues: cardValue[] = [
@@ -21,35 +21,33 @@ export const useCardStore = defineStore("card", () => {
   ];
   const cardTypes: string[] = ["♥", "♦", "♣", "♠"];
   const winner = ref<string>("");
-  
-  
+
   const cards = ref<card[]>([]);
   const playerCards = ref<card[]>([]);
   const dealerCards = ref<card[]>([]);
   const playerPoints = ref<number>(0);
   const dealerPoints = ref<number>(0);
- 
-  
+
   const playerName = ref<string>("Player");
   const nameError = ref<string>("");
   const bidError = ref<string>("");
   const walletMoney = ref<number>(1000);
   const bidAmount = ref<number>(0);
-
-
+  const status = ref<boolean>(false);
+  const hitController = ref<boolean>(false);
+  const standController = ref<boolean>(false);
 
   const resetRound = (): void => {
     winner.value = "";
     dealerPoints.value = 0;
-    playerPoints.value = 0;    
-    bidAmount.value = 0;  
+    playerPoints.value = 0;
+    bidAmount.value = 0;
     playerCards.value = [];
     dealerCards.value = [];
-    
+    hitController.value = false;
+    standController.value = false;
+    status.value = false;
   };
-
-
-
 
   const deckGenerator = (): card[] => {
     let deck: card[] = [];
@@ -64,8 +62,6 @@ export const useCardStore = defineStore("card", () => {
     return deck;
   };
 
-  
-
   const randomCardGenerator = (): card | null => {
     if (cards.value.length === 0) return null;
     const index = Math.floor(Math.random() * cards.value.length);
@@ -73,7 +69,6 @@ export const useCardStore = defineStore("card", () => {
     cards.value.splice(index, 1);
     return c;
   };
-
 
   const givePlayerPoints = (cards: card[]): number => {
     let points = 0;
@@ -95,7 +90,6 @@ export const useCardStore = defineStore("card", () => {
     return points;
   };
 
-
   watch(
     () => cards.value.length,
     (newLength) => {
@@ -104,8 +98,6 @@ export const useCardStore = defineStore("card", () => {
       }
     }
   );
-
-
 
   const giveDealerPoints = (cards: card[]): number => {
     let points = 0;
@@ -129,13 +121,12 @@ export const useCardStore = defineStore("card", () => {
     return points;
   };
 
-
   const giveCardToPlayer = (): void => {
     const drawn = randomCardGenerator();
     if (!drawn) return; // deck empty guard
     playerCards.value.push(drawn);
     playerPoints.value = givePlayerPoints(playerCards.value);
-    console.log(playerCards.value );
+    console.log("player: " + playerPoints.value);
   };
 
   const giveCardToDealer = (): void => {
@@ -143,7 +134,8 @@ export const useCardStore = defineStore("card", () => {
     if (!drawn) return;
     dealerCards.value.push(drawn); // only push visible cards
     dealerPoints.value = giveDealerPoints(dealerCards.value);
-    console.log(dealerCards.value)
+    console.log(dealerCards.value);
+    console.log("dealer: " + dealerPoints.value);
   };
 
   const validatePlayer = (): boolean => {
@@ -169,12 +161,20 @@ export const useCardStore = defineStore("card", () => {
       bidAmount.value = 0;
       return;
     }
+    hitController.value = false;
+    standController.value = false;
     cards.value = deckGenerator();
     walletMoney.value -= bidAmount.value;
     giveCardToPlayer();
     giveCardToPlayer();
     giveCardToDealer(); // visible
-    giveCardToDealer(); // hidden or revealed later
+    // giveCardToDealer(); // hidden or revealed later
+    if (playerPoints.value == 21) {
+      giveCardToDealer();
+      hitController.value = true;
+      standController.value = true;
+      gameOver();
+    }
     router.push("/GamePage");
   };
 
@@ -188,74 +188,79 @@ export const useCardStore = defineStore("card", () => {
   const newRound = () => {
     resetRound();
     router.push("/BetPage");
+    console.log("New game");
   };
 
- 
   const hit = (): void => {
     giveCardToPlayer();
-    if (playerPoints.value >= 21) {
-      judge(); // Decide immediately on bust or 21
+    if (playerPoints.value > 21) {
+      giveCardToDealer();
+      gameOver(); // Decide immediately on bust or 21
     }
   };
 
+  const stand = (): void => {
+    // Dealer keeps hitting until 17 or more
+    giveCardToDealer();
+    while (dealerPoints.value < 17) {
+      giveCardToDealer();
+    }
 
- const stand = (): void => {
-   // Dealer keeps hitting until 17 or more
-   while (dealerPoints.value < 17) {
-     giveCardToDealer();
-   }
+    gameOver();
+  };
 
-   judge();
- };
- 
-  const judge = (): void => {
+  const gameOver = (): void => {
     const player = playerPoints.value;
     const dealer = dealerPoints.value;
 
-    
+    // Player busts
     if (player > 21) {
       winner.value = "Player Busts — Dealer Wins!";
+      status.value = true;
       return;
     }
 
-    
+    // Dealer busts
     if (dealer > 21) {
       winner.value = "Dealer Busts — Player Wins!";
-      walletMoney.value += bidAmount.value * 2; 
+      walletMoney.value += bidAmount.value * 2;
+      status.value = true;
       return;
     }
 
-    
-    if (player === 21 && dealer === 21) {
-      winner.value = "Both Have Blackjack —Draw!";
-      walletMoney.value += bidAmount.value; 
-      return;
-    }
-
-    if (player === 21) {
+    if (player == 21) {
+      if (dealer == 21) {
+        winner.value = "Both Have Blackjack — Draw!";
+        walletMoney.value += bidAmount.value; // refund
+        status.value = true;
+        return;
+      }
       winner.value = "Blackjack! Player Wins!";
-      walletMoney.value += bidAmount.value * 2; 
+      walletMoney.value += bidAmount.value * 2;
+      status.value = true;
       return;
     }
-
+    // Dealer Blackjack only
     if (dealer === 21) {
       winner.value = "Dealer Has Blackjack!";
+      status.value = true;
       return;
     }
 
-    
+    // Compare scores
     if (player === dealer) {
       winner.value = "Match Drawn!";
+      status.value = true;
       walletMoney.value += bidAmount.value; // refund
     } else if (player > dealer) {
       winner.value = "Player Wins!";
       walletMoney.value += bidAmount.value * 2;
+      status.value = true;
     } else {
       winner.value = "Dealer Wins!";
+      status.value = true;
     }
   };
-
-  
 
   return {
     nameError,
@@ -273,11 +278,11 @@ export const useCardStore = defineStore("card", () => {
     stand,
     dealerPoints,
     playerPoints,
-
+    status,
     winner,
     redirectToHome,
     newRound,
-
-    
+    hitController,
+    standController,
   };
 });

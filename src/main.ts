@@ -1,10 +1,10 @@
-import { createApp } from 'vue'
+import { createApp } from "vue";
 import "mdb-vue-ui-kit/css/mdb.min.css";
-const pinia=createPinia()
-import App from './App.vue'
-import { createPinia } from 'pinia';
-import { router } from './router/intex';
+const pinia = createPinia();
+import App from "./App.vue";
+import { createPinia } from "pinia";
+import { router } from "./router";
 const app = createApp(App);
-app.use(router)
-app.use(pinia)
-app.mount('#app')
+app.use(router);
+app.use(pinia);
+app.mount("#app");

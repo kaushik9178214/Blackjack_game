@@ -1,6 +1,10 @@
 <template>
   <div>
     <MDBCard class="border border-dark rounded-0">
+      <MDBCardHeader class="text-center">
+        <MDBCardTitle>Welcome</MDBCardTitle>
+        
+      </MDBCardHeader>
       <MDBCardBody class="d-grid gap-4">
         <MDBInput
           v-model="playerName"
@@ -22,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { MDBBtn, MDBCard, MDBCardBody, MDBInput } from "mdb-vue-ui-kit";
+import { MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCardTitle, MDBInput } from "mdb-vue-ui-kit";
 const playerName = defineModel<string>();
 defineProps<{
   nameError: string;

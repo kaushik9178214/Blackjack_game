@@ -1,5 +1,5 @@
 <template>
-  <MDBCard 
+  <MDBCard
     ><MDBCardBody class="d-grid gap-3 border border-dark">
       <div class="fs-4 text-center">
         <strong>Available amount :</strong> ${{ walletMoney }}
@@ -12,7 +12,9 @@
       ></MDBInput>
       <div class="text-danger">{{ bidError }}</div>
       <div class="text-center">
-        <MDBBtn class="border border-danger text-danger rounded-0" v-on:click="startGame"
+        <MDBBtn
+          class="border border-danger text-danger rounded-0"
+          v-on:click="startGame"
           >Start</MDBBtn
         >
       </div>
@@ -29,6 +31,7 @@ defineProps<{
 const emits = defineEmits<{
   (e: "requestToStartGame", value: number): void;
 }>();
+// props
 const walletMoney = defineModel<number>("walletMoney");
 const bidAmount = ref<number>(1);
 const startGame = (): void => {

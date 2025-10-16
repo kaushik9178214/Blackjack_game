@@ -1,12 +1,12 @@
 <template>
   
-    <MDBCard :style="{width: '5rem', height: '8rem'}"
-      :class="
+      <!-- :class="
         symbol == '♥' || symbol == '♦'
           ? 'border border-danger'
           : 'border border-dark'
-      "
-      class="rounded-0"
+      " -->
+    <MDBCard :style="{width: '5rem'}"
+      class=" shadow-5 border border-secondary"
     >
       <div class="p-2">
         <div :class="color">{{ card }}</div>

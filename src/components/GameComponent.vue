@@ -12,7 +12,7 @@
       >
       <div class="text-center">
         <div class="text-no-wrap"><strong>Current Bid:</strong> ${{ bidAmount }}</div>
-        <div >{{ winner }}</div>
+        <div class="text-danger" >{{ winner }}</div>
         <div class="text-no-wrap"><strong>Wallet Balance:</strong> ${{ walletMoney }}</div>
       </div>
       <MDBBtn 
